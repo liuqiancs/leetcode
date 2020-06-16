@@ -21,7 +21,7 @@ public class Test1114_ReentrantLock {
     class Foo {
         Lock lock = new ReentrantLock();
         // 方法执行标识 1 标识已经执行完first方法，允许second方法执行 2 标识已经执行完second方法，允许third方法执行
-        private volatile int flag = 0;
+        private int flag = 0;
         Condition stage2 = lock.newCondition();
         Condition stage3 = lock.newCondition();
         public Foo() {
