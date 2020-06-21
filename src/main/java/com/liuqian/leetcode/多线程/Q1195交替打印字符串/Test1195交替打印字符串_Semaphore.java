@@ -1,17 +1,17 @@
-package com.liuqian.leetcode.thread.Q1195;
+package com.liuqian.leetcode.多线程.Q1195交替打印字符串;
 
+import java.util.concurrent.Semaphore;
 import java.util.function.IntConsumer;
 
 /**
  * 1195. 交替打印字符串
- * 参考：https://leetcode-cn.com/problems/fizz-buzz-multithreaded/solution/1ge-reentrantlock-1ge-condition-1ge-volatilebian-l/
- * 无锁+while忙等
- * state必须声明为volatile，否则其他线程不可见
+ * 参考：https://leetcode-cn.com/problems/fizz-buzz-multithreaded/solution/javashi-xian-shi-yong-semaphore-huo-zhe-reentrantl/
+ * 信号量
  *
  */
-public class Test1195_nolock {
+public class Test1195交替打印字符串_Semaphore {
     public static void main(String[] args) {
-        FizzBuzz fizzBuzz = new Test1195_nolock().new FizzBuzz(15);
+        FizzBuzz fizzBuzz = new Test1195交替打印字符串_Semaphore().new FizzBuzz(15);
         new Thread(() -> {
             try {
                 fizzBuzz.fizz(() -> System.out.print("fizz,"));
@@ -50,54 +50,65 @@ public class Test1195_nolock {
 
     class FizzBuzz {
         private int n;
-        private volatile int state = -1;
+
+        Semaphore semaphoreOther = new Semaphore(1);
+        Semaphore semaphore3 = new Semaphore(0);
+        Semaphore semaphore5 = new Semaphore(0);
+        Semaphore semaphore15 = new Semaphore(0);
+
 
         public FizzBuzz(int n) {
             this.n = n;
         }
 
         public void fizz(Runnable printFizz) throws InterruptedException {
-            for (int i = 3; i <= n; i += 3) {   //只输出3的倍数(不包含15的倍数)
-                if (i % 15 == 0)    //15的倍数不处理，交给fizzbuzz()方法处理
-                    continue;
-                while (state != 3) {}
-                printFizz.run();
-                state = -1;    //控制权交还给number()方法
+            for (int i = 3 ;i <= n ;i=i+3){
+                if (i % 5 != 0) {
+                    semaphore3.acquire();
+                    printFizz.run();
+                    semaphoreOther.release();
+                }
             }
         }
 
         public void buzz(Runnable printBuzz) throws InterruptedException {
-            for (int i = 5; i <= n; i += 5) {   //只输出5的倍数(不包含15的倍数)
-                if (i % 15 == 0)    //15的倍数不处理，交给fizzbuzz()方法处理
-                    continue;
-                while (state != 5){}
-                printBuzz.run();
-                state = -1;    //控制权交还给number()方法
+            for (int i = 5 ;i <= n ;i=i+5){
+                if (i % 3 != 0) {
+                    semaphore5.acquire();
+                    printBuzz.run();
+                    semaphoreOther.release();
+                }
             }
         }
 
         public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
-            for (int i = 15; i <= n; i += 15) {   //只输出15的倍数
-                while (state != 15){}
+            for (int i = 15 ;i <= n ;i=i+15){
+                semaphore15.acquire();
                 printFizzBuzz.run();
-                state = -1;    //控制权交还给number()方法
+                semaphoreOther.release();
             }
         }
 
         public void number(IntConsumer printNumber) throws InterruptedException {
-            for (int i = 1; i <= n; ++i) {
-                while (state != -1){}
-                if (i % 3 != 0 && i % 5 != 0)
+            for (int i = 1 ;i <= n ;i++){
+                semaphoreOther.acquire();
+                if(i%3 != 0 && i%5 != 0){
                     printNumber.accept(i);
+                }
+                if(i % 15 == 0){
+                    semaphore15.release();
+                }
+                else if(i % 5 == 0){
+                    semaphore5.release();
+                }
+                else if(i % 3 == 0){
+                    semaphore3.release();
+                }
                 else {
-                    if (i % 15 == 0)
-                        state = 15;    //交给fizzbuzz()方法处理
-                    else if (i % 5 == 0)
-                        state = 5;    //交给buzz()方法处理
-                    else
-                        state = 3;    //交给fizz()方法处理
+                    semaphoreOther.release();
                 }
             }
         }
     }
+
 }

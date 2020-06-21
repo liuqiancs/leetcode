@@ -1,15 +1,11 @@
-package com.liuqian.leetcode.thread.Q1115;
-
-import java.util.concurrent.Semaphore;
+package com.liuqian.leetcode.多线程.Q1115交替打印FooBar;
 
 /**
  * 1115. 交替打印FooBar
- * 参考 https://leetcode-cn.com/problems/print-foobar-alternately/solution/liang-ge-xin-hao-liang-jiao-ti-kong-zhi-by-atizose/
- * 信号量
  */
-public class Test1115_Semaphore {
+public class Test1115交替打印FooBar_wait_notify {
     public static void main(String[] args) {
-        FooBar fooBar = new Test1115_Semaphore().new FooBar(10);
+        FooBar fooBar = new Test1115交替打印FooBar_wait_notify().new FooBar(10);
 
         new Thread(() -> {
             try {
@@ -30,33 +26,37 @@ public class Test1115_Semaphore {
 
     }
 
-
     class FooBar {
         private int n;
-
-        private Semaphore foo = new Semaphore(1);
-        private Semaphore bar = new Semaphore(0);
-
+        private boolean barstarted = false;
 
         public FooBar(int n) {
             this.n = n;
         }
 
         public void foo(Runnable printFoo) throws InterruptedException {
-
             for (int i = 0; i < n; i++) {
-                foo.acquire();
-                printFoo.run();
-                bar.release();
+                synchronized (this){
+                    while (barstarted){
+                        this.wait();
+                    }
+                    printFoo.run();
+                    barstarted = true;
+                    this.notify();
+                }
             }
         }
 
         public void bar(Runnable printBar) throws InterruptedException {
-
             for (int i = 0; i < n; i++) {
-                bar.acquire();
-                printBar.run();
-                foo.release();
+                synchronized (this){
+                    while (!barstarted){
+                        this.wait();
+                    }
+                    printBar.run();
+                    barstarted = false;
+                    this.notify();
+                }
             }
         }
     }

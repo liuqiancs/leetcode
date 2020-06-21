@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1115;
+package com.liuqian.leetcode.多线程.Q1115交替打印FooBar;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,9 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * 参考 https://leetcode-cn.com/problems/print-foobar-alternately/solution/li-yong-reentrantlockhe-conditionshi-xian-by-cr6-2/
  * ReentrantLock
  */
-public class Test1115_ReentrantLock {
+public class Test1115交替打印FooBar_ReentrantLock {
     public static void main(String[] args) {
-        FooBar fooBar = new Test1115_ReentrantLock().new FooBar(10);
+        FooBar fooBar = new Test1115交替打印FooBar_ReentrantLock().new FooBar(10);
 
         new Thread(() -> {
             try {

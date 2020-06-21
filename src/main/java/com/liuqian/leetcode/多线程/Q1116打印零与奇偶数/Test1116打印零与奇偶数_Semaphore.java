@@ -1,13 +1,16 @@
-package com.liuqian.leetcode.thread.Q1116;
+package com.liuqian.leetcode.多线程.Q1116打印零与奇偶数;
+
+import java.util.concurrent.Semaphore;
 import java.util.function.IntConsumer;
 
 /**
  * 1116. 打印零与奇偶数
  * 参考
+ * 信号量
  */
-public class Test1116_wait_notifyall {
+public class Test1116打印零与奇偶数_Semaphore {
     public static void main(String[] args) {
-        ZeroEvenOdd zeroEvenOdd = new Test1116_wait_notifyall().new ZeroEvenOdd(6);
+        ZeroEvenOdd zeroEvenOdd = new Test1116打印零与奇偶数_Semaphore().new ZeroEvenOdd(1);
 
         new Thread(() -> {
             try {
@@ -40,7 +43,9 @@ public class Test1116_wait_notifyall {
     class ZeroEvenOdd {
         private int n;
 
-        private int state = 0;
+        Semaphore zs = new Semaphore(1);
+        Semaphore es = new Semaphore(0);
+        Semaphore os = new Semaphore(0);
 
 
         public ZeroEvenOdd(int n) {
@@ -50,45 +55,29 @@ public class Test1116_wait_notifyall {
         // printNumber.accept(x) outputs "x", where x is an integer.
         public void zero(IntConsumer printNumber) throws InterruptedException {
             for(int i = 1 ; i<= n; i++){
-                synchronized (this){
-                    while(state != 0){
-                        this.wait();
-                    }
-                    printNumber.accept(0);
-                    if(i%2 == 0){
-                        state = 2;
-                        this.notifyAll();
-                    }else{
-                        state = 1;
-                        this.notifyAll();
-                    }
+                zs.acquire();
+                printNumber.accept(0);
+                if(i%2 == 0){
+                    es.release();
+                }else{
+                    os.release();
                 }
             }
         }
 
         public void even(IntConsumer printNumber) throws InterruptedException {
             for(int i = 2 ; i<=n ; i = i+ 2){
-                synchronized (this){
-                    while(state != 2){
-                        this.wait();
-                    }
-                    printNumber.accept(i);
-                    state = 0;
-                    this.notifyAll();
-                }
+                es.acquire();
+                printNumber.accept(i);
+                zs.release();
             }
         }
 
         public void odd(IntConsumer printNumber) throws InterruptedException {
             for(int i = 1 ; i<=n ; i = i+ 2){
-                synchronized (this){
-                    while(state != 1){
-                        this.wait();
-                    }
-                    printNumber.accept(i);
-                    state = 0;
-                    this.notifyAll();
-                }
+                os.acquire();
+                printNumber.accept(i);
+                zs.release();
             }
         }
     }

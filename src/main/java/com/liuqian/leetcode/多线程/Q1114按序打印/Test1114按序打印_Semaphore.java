@@ -1,49 +1,51 @@
-package com.liuqian.leetcode.thread.Q1114;
+package com.liuqian.leetcode.多线程.Q1114按序打印;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 /**
  *1114. 按序打印
  * 参考 https://leetcode-cn.com/problems/print-in-order/solution/javabing-fa-gong-ju-lei-da-lian-bing-by-kevinbauer/
- * CountDownLatch
+ * 信号量
  */
-public class Test1114_CountDownLatch {
+public class Test1114按序打印_Semaphore {
     public static void main(String[] args) throws Exception {
-        Foo foo = new Test1114_CountDownLatch().new Foo();
+        Foo foo = new Test1114按序打印_Semaphore().new Foo();
         new Thread(() -> foo.second(() -> System.out.print("two"))).start();
         new Thread(() -> foo.first(() -> System.out.print("one"))).start();
         new Thread(() -> foo.third(() -> System.out.print("three"))).start();
     }
 
     class Foo {
-        CountDownLatch stage2 = new CountDownLatch(1);
-        CountDownLatch stage3 = new CountDownLatch(1);
+        Semaphore stage2 = new Semaphore(0);
+        Semaphore stage3 = new Semaphore(0);
 
         public Foo() {
         }
 
         public void first(Runnable printFirst) {
             printFirst.run();
-            stage2.countDown();
+            stage2.release();
         }
 
         public void second(Runnable printSecond) {
             try {
-                stage2.await();
+                stage2.acquire();
                 printSecond.run();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }finally {
-                stage3.countDown();
+                stage3.release();
             }
         }
 
         public void third(Runnable printThird) {
             try {
-                stage3.await();
+                stage3.acquire();
                 printThird.run();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }finally {
+
             }
         }
 

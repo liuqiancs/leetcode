@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1114;
+package com.liuqian.leetcode.多线程.Q1114按序打印;
 
 /**
  *1114. 按序打印
@@ -7,9 +7,9 @@ package com.liuqian.leetcode.thread.Q1114;
  * flag必须声明为volatile，否则其他线程不可见
  * while忙等会一定程度上加重cpu的负担，对于job执行时间很短的情况，该算法比较合适
  */
-public class Test1114_nolock {
+public class Test1114按序打印_nolock {
     public static void main(String[] args) throws Exception {
-        Foo foo = new Test1114_nolock().new Foo();
+        Foo foo = new Test1114按序打印_nolock().new Foo();
         new Thread(() -> foo.second(() -> System.out.print("two"))).start();
         new Thread(() -> foo.first(() -> System.out.print("one"))).start();
         new Thread(() -> foo.third(() -> System.out.print("three"))).start();

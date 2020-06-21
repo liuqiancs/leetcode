@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1115;
+package com.liuqian.leetcode.多线程.Q1115交替打印FooBar;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -7,9 +7,9 @@ import java.util.concurrent.CountDownLatch;
  * 参考 https://leetcode-cn.com/problems/print-foobar-alternately/solution/yong-liang-ge-countdownlatchhu-xiang-awaitji-ke-by/
  * CountDownLatch
  */
-public class Test1115_CountDownLatch {
+public class Test1115交替打印FooBar_CountDownLatch {
     public static void main(String[] args) {
-        FooBar fooBar = new Test1115_CountDownLatch().new FooBar(10);
+        FooBar fooBar = new Test1115交替打印FooBar_CountDownLatch().new FooBar(10);
 
         new Thread(() -> {
             try {

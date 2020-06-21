@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1115;
+package com.liuqian.leetcode.多线程.Q1115交替打印FooBar;
 
 /**
  * 1115. 交替打印FooBar
@@ -7,9 +7,9 @@ package com.liuqian.leetcode.thread.Q1115;
  * printBarSwitch必须声明为volatile，否则其他线程不可见
  *
  */
-public class Test1115_nolock {
+public class Test1115交替打印FooBar_nolock {
     public static void main(String[] args) {
-        FooBar fooBar = new Test1115_nolock().new FooBar(10);
+        FooBar fooBar = new Test1115交替打印FooBar_nolock().new FooBar(10);
 
         new Thread(() -> {
             try {

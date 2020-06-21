@@ -1,18 +1,14 @@
-package com.liuqian.leetcode.thread.Q1195;
+package com.liuqian.leetcode.多线程.Q1195交替打印字符串;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.IntConsumer;
 
 /**
  * 1195. 交替打印字符串
- * ReentrantLock
  *
  */
-public class Test1195_ReentrantLock {
+public class Test1195交替打印字符串_wait_notifyall {
     public static void main(String[] args) {
-        FizzBuzz fizzBuzz = new Test1195_ReentrantLock().new FizzBuzz(15);
+        FizzBuzz fizzBuzz = new Test1195交替打印字符串_wait_notifyall().new FizzBuzz(15);
         new Thread(() -> {
             try {
                 fizzBuzz.fizz(() -> System.out.print("fizz,"));
@@ -52,14 +48,7 @@ public class Test1195_ReentrantLock {
     class FizzBuzz {
         private int n;
 
-        private Lock lock = new ReentrantLock();
-        private Condition fc = lock.newCondition();
-        private Condition bc = lock.newCondition();
-        private Condition fbc = lock.newCondition();
-        private Condition nc = lock.newCondition();
         private int state = -1;
-
-
 
         public FizzBuzz(int n) {
             this.n = n;
@@ -68,16 +57,13 @@ public class Test1195_ReentrantLock {
         public void fizz(Runnable printFizz) throws InterruptedException {
             for(int i = 3 ; i <= n ; i = i+3){
                 if(i%5 !=0){
-                    try {
-                        lock.lock();
-                        if(state != 3){
-                            fc.await();
+                    synchronized (this){
+                        while (state != 3){
+                            this.wait();
                         }
                         printFizz.run();
                         state = -1;
-                        nc.signal();
-                    }finally {
-                        lock.unlock();
+                        this.notifyAll();
                     }
                 }
             }
@@ -86,16 +72,13 @@ public class Test1195_ReentrantLock {
         public void buzz(Runnable printBuzz) throws InterruptedException {
             for(int i = 5 ; i <= n ; i = i+5){
                 if(i%3 !=0){
-                    try {
-                        lock.lock();
-                        if(state != 5){
-                            bc.await();
+                    synchronized (this){
+                        while (state != 5){
+                            this.wait();
                         }
                         printBuzz.run();
                         state = -1;
-                        nc.signal();
-                    }finally {
-                        lock.unlock();
+                        this.notifyAll();
                     }
                 }
             }
@@ -103,46 +86,39 @@ public class Test1195_ReentrantLock {
 
         public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
             for(int i = 15 ; i <= n ; i = i+15){
-                try {
-                    lock.lock();
-                    if(state != 15){
-                        fbc.await();
+                synchronized (this){
+                    while (state != 15){
+                        this.wait();
                     }
                     printFizzBuzz.run();
                     state = -1;
-                    nc.signal();
-                }finally {
-                    lock.unlock();
+                    this.notifyAll();
                 }
             }
         }
 
         public void number(IntConsumer printNumber) throws InterruptedException {
             for(int i = 1 ; i<=n ; i++){
-                try {
-                    lock.lock();
-                    if (state != -1){
-                        nc.await();
+                synchronized (this){
+                    while (state != -1){
+                        this.wait();
                     }
                     if(i%3 == 0 && i%5 == 0){
                         state = 15;
-                        fbc.signal();
+                        this.notifyAll();
                     }
                     else if(i%3 == 0){
                         state = 3;
-                        fc.signal();
+                        this.notifyAll();
                     }
                     else if(i%5 == 0){
                         state = 5;
-                        bc.signal();
+                        this.notifyAll();
                     }
                     else {
                         printNumber.accept(i);
                     }
-                }finally {
-                    lock.unlock();
                 }
-
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1195;
+package com.liuqian.leetcode.多线程.Q1195交替打印字符串;
 
 import java.util.concurrent.Semaphore;
 import java.util.function.IntConsumer;
@@ -9,9 +9,9 @@ import java.util.function.IntConsumer;
  * 信号量
  *
  */
-public class Test1195_Semaphore_2 {
+public class Test1195交替打印字符串_Semaphore_2 {
     public static void main(String[] args) {
-        FizzBuzz fizzBuzz = new Test1195_Semaphore_2().new FizzBuzz(15);
+        FizzBuzz fizzBuzz = new Test1195交替打印字符串_Semaphore_2().new FizzBuzz(15);
         new Thread(() -> {
             try {
                 fizzBuzz.fizz(() -> System.out.print("fizz,"));

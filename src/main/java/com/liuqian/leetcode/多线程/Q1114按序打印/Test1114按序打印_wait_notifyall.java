@@ -1,13 +1,13 @@
-package com.liuqian.leetcode.thread.Q1114;
+package com.liuqian.leetcode.多线程.Q1114按序打印;
 
 /**
  *1114. 按序打印
  *
  * wait_notifyAll
  */
-public class Test1114_wait_notifyall {
+public class Test1114按序打印_wait_notifyall {
     public static void main(String[] args) throws Exception {
-        Foo foo = new Test1114_wait_notifyall().new Foo();
+        Foo foo = new Test1114按序打印_wait_notifyall().new Foo();
         new Thread(() -> foo.first(() -> System.out.print("one"))).start();
         new Thread(() -> foo.second(() -> System.out.print("two"))).start();
         new Thread(() -> foo.third(() -> System.out.print("three"))).start();

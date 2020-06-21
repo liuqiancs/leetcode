@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1116;
+package com.liuqian.leetcode.多线程.Q1116打印零与奇偶数;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,9 +9,9 @@ import java.util.function.IntConsumer;
  * 参考
  * ReentrantLock
  */
-public class Test1116_ReentrantLock {
+public class Test1116打印零与奇偶数_ReentrantLock {
     public static void main(String[] args) {
-        ZeroEvenOdd zeroEvenOdd = new Test1116_ReentrantLock().new ZeroEvenOdd(6);
+        ZeroEvenOdd zeroEvenOdd = new Test1116打印零与奇偶数_ReentrantLock().new ZeroEvenOdd(6);
 
         new Thread(() -> {
             try {

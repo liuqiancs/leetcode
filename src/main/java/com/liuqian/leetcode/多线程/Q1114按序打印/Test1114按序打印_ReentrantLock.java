@@ -1,4 +1,4 @@
-package com.liuqian.leetcode.thread.Q1114;
+package com.liuqian.leetcode.多线程.Q1114按序打印;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -10,9 +10,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * ReentrantLock
  * 比wait notifyAll的优点，就是可以通知指定等待队列
  */
-public class Test1114_ReentrantLock {
+public class Test1114按序打印_ReentrantLock {
     public static void main(String[] args) throws Exception {
-        Foo foo = new Test1114_ReentrantLock().new Foo();
+        Foo foo = new Test1114按序打印_ReentrantLock().new Foo();
         new Thread(() -> foo.second(() -> System.out.print("two"))).start();
         new Thread(() -> foo.first(() -> System.out.print("one"))).start();
         new Thread(() -> foo.third(() -> System.out.print("three"))).start();
